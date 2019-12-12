@@ -4,31 +4,30 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 #these two module import to customize default django admin page
 
-
 class UserProfileManager(BaseUserManager):
     """Manager for new user profile"""
 
 
-    def createuser(self,email,name,password=None):
+    def create_user(self,email,name,password=None):
         """create new user profile"""
         if not email:
             raise ValueError("user must have an email address")
 
         email = self.normalize_email(email)
-        user = self.model(eamil=email,name=name)
+        user = self.model(email=email,name=name,)
 
         user.set_password(password)
-        #password should we saved as a hash table
-        user.save(using=self._db)
-
-    def create_superuser(self):
-        """craeting a super user """
-        user =  createuser(email,name,password)
-        user.is_superuser = True
-        uuser.is_staff = True
+        #password should we saved as a hash key
         user.save(using=self._db)
         return user
 
+    def create_superuser(self,email,name,password):
+        """craeting a super user """
+        user =  self.create_user(email,name,password)
+        user.is_superuser = True
+        user.is_staff = True
+        user.save(using=self._db)
+        return user
 
 class UserProfile(AbstractBaseUser,PermissionsMixin):
     ''''Data base for user system'''
@@ -39,8 +38,8 @@ class UserProfile(AbstractBaseUser,PermissionsMixin):
 
     objects = UserProfileManager()
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELD = ['name']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name']
 
     def get_full_name(self):
         """return full name"""
