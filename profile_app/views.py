@@ -6,6 +6,7 @@ from profile_app import serializers
 from profile_app import models
 from rest_framework.authentication import TokenAuthentication
 from profile_app import permissions
+from rest_framework import filters
 
 class HelloApiViews(APIView):
     """Test api View"""
@@ -92,3 +93,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = models.UserProfile.objects.all()
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateOwnProfile,)
+    """Handle creating, creating and updating profiles"""
+    ...
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name', 'email',)
