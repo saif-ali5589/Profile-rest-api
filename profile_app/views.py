@@ -2,12 +2,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
-from profile_app import serializer
+from profile_app import serializers
+from profile_app import models
+from rest_framework.authentication import TokenAuthentication
+from profile_app import permissions
 
 class HelloApiViews(APIView):
     """Test api View"""
 
-    serializer_class = serializer.HelloSerializer
+    serializer_class = serializers.HelloSerializer
 
     def get(self,request,format=None):
         """Return a list of api views"""
@@ -29,7 +32,7 @@ class HelloApiViews(APIView):
         if serializer.is_valid():
             name = serializer.validated_data.get('name')
             #message = f'Saif{name}'
-            message = f'my name is khan'
+            message = f'name'
             return Response({'message':message})
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
@@ -49,23 +52,15 @@ class HelloApiViews(APIView):
 
 class HelloViewSet(viewsets.ViewSet):
     """Test api viewset"""
-    serializer_class = serializer.HelloSerializer
+    serializer_class = serializers.HelloSerializer
 
     def list(self,request):
         """Return a heelo message"""
 
-        a_viewset = [
-            'Uses actions (list,create,retreive,update,partial_update)',
-            'Automatically maps to urls using routers',
-            'Provide more functionality with less code',
-        ]
-
-
-        return Response({'message':'hello','a_viewset':a_viewset})
 
     def create(self,request):
         """create data"""
-        #serializer = self.serializer_class(data=request.data)
+        serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
             name = serializer.validated_data.get('name')
@@ -90,3 +85,10 @@ class HelloViewSet(viewsets.ViewSet):
     def destroy(self,request,pk=None):
         """delete"""
         return Response({'method':'DELETE'})
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    """Handle creating and updating profile"""
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateOwnProfile,)
