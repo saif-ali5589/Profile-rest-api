@@ -5,6 +5,7 @@ from profile_app import views
 router = DefaultRouter()
 router.register('hello-viewset',views.HelloViewSet,base_name='hello-viewset')
 router.register('profile',views.UserProfileViewSet)
+router.register('feed',views.UserProfileFeedViewSet)
 #we dont need to specify the base name because we already define queryset which automatically take base call
 
 #as_view functon is invild funtion for api view
