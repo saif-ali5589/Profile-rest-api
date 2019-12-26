@@ -12,14 +12,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ('id','email','name','password')
         #tuple of object that can accessible through an api
         #we have make password field to write only not accessible to anyone
-        '''extra_kwargs = {'password':
+        extra_kwargs = {'password':
         {
         'write_only':True,
         'style':
         {
         'input_type':'password'}
         }
-        }'''
+        }
 
     def create(self,validated_data):
         """create and return a new user"""

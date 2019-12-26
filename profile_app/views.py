@@ -7,6 +7,8 @@ from profile_app import models
 from rest_framework.authentication import TokenAuthentication
 from profile_app import permissions
 from rest_framework import filters
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.settings import api_settings
 
 class HelloApiViews(APIView):
     """Test api View"""
@@ -94,6 +96,9 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateOwnProfile,)
     """Handle creating, creating and updating profiles"""
-    ...
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
+
+class UserLoginApiView(ObtainAuthToken):
+    """Create login Api"""
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
